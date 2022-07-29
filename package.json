@@ -1,7 +1,16 @@
 {
-  "name": "@tnez/effects",
+  "name": "@tnezdev/effects",
   "version": "0.0.0",
   "description": "Provide **side-effects** so your code can do _something_",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tnez/effects.git"
+  },
+  "author": {
+    "name": "Travis Nesland",
+    "email": "travis@tnez.dev"
+  },
+  "license": "ISC",
   "files": [
     "dist/*",
     "!dist/**/*.test.js",
@@ -17,8 +26,6 @@
     "clean": "rimraf ./dist",
     "test": "jest"
   },
-  "author": "Travis Nesland",
-  "license": "ISC",
   "devDependencies": {
     "@tsconfig/recommended": "1.0.1",
     "@types/jest": "28.1.6",

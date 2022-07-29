@@ -3,11 +3,16 @@ on: [push]
 jobs:
   ci:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '16.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@tnezdev'
       - name: Installing Dependencies
         run: npm ci
       - name: Checking Code Style
@@ -18,3 +23,7 @@ jobs:
         run: npm test
       - name: Transpiling Code
         run: npm run build
+      - name: Publishing Code
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
