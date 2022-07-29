@@ -12,7 +12,7 @@
   "scripts": {
     "prebuild": "npm run clean",
     "build": "tsc",
-    "checks:lint": "eslint src/ --ext .ts",
+    "checks:code-style": "eslint src/ --ext .ts",
     "checks:types": "tsc -p tsconfig.json --noEmit",
     "clean": "rimraf ./dist",
     "test": "jest"
