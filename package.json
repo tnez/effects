@@ -1,6 +1,6 @@
 {
   "name": "@tnezdev/effects",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Provide **side-effects** so your code can do _something_",
   "repository": {
     "type": "git",
@@ -16,8 +16,8 @@
     "!dist/**/*.test.js",
     "!dist/**/*.test.d.ts"
   ],
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "dist/main.js",
+  "typings": "dist/main.d.ts",
   "scripts": {
     "prebuild": "npm run clean",
     "build": "tsc",
