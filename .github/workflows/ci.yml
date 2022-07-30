@@ -11,7 +11,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-          registry-url: 'https://npm.pkg.github.com'
+          registry-url: 'https://registry.npmjs.org/'
           scope: '@tnezdev'
       - name: Installing Dependencies
         run: npm ci
@@ -26,4 +26,5 @@ jobs:
       - name: Publishing Code
         uses: JS-DevTools/npm-publish@v1
         with:
+          access: 'public'
           token: ${{ secrets.NPM_TOKEN }}
