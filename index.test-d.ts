@@ -7,8 +7,16 @@ import Effects from '.'
  * - update
  * - remove
  */
-expectType<Promise<Effects.Data.DataRecord>>(Effects.Data.insert({ type: 'thing', version: '1.0', data: { foo: 'bar', baz: 'fizz' }}))
-expectType<Promise<Effects.Data.DataRecord>>(Effects.Data.update('ID-1234-ABCD', { baz: 'new value' }))
+expectType<Promise<Effects.Data.DataRecord>>(
+  Effects.Data.insert({
+    type: 'thing',
+    version: '1.0',
+    data: { foo: 'bar', baz: 'fizz' },
+  }),
+)
+expectType<Promise<Effects.Data.DataRecord>>(
+  Effects.Data.update('ID-1234-ABCD', { baz: 'new value' }),
+)
 expectType<Promise<void>>(Effects.Data.remove('ID-1234-ABCD'))
 
 /**
@@ -17,12 +25,29 @@ expectType<Promise<void>>(Effects.Data.remove('ID-1234-ABCD'))
  * - dequeue
  * - update
  */
-expectType<Promise<Effects.Jobs.Job>>(Effects.Jobs.enqueue({ name: 'build-trees', context: { id: '1234', numTrees: 4 } }))
-expectType<Promise<Effects.Jobs.Job>>(Effects.Jobs.enqueue({ name: 'build-trees', runAfter: new Date('2024-01-01'), context: { id: '1234', numTrees: 4 } }))
+expectType<Promise<Effects.Jobs.Job>>(
+  Effects.Jobs.enqueue({
+    name: 'build-trees',
+    context: { id: '1234', numTrees: 4 },
+  }),
+)
+expectType<Promise<Effects.Jobs.Job>>(
+  Effects.Jobs.enqueue({
+    name: 'build-trees',
+    runAfter: new Date('2024-01-01'),
+    context: { id: '1234', numTrees: 4 },
+  }),
+)
 expectType<Promise<Effects.Jobs.Job>>(Effects.Jobs.dequeue('JOB-ID-1234'))
-expectType<Promise<Effects.Jobs.Job>>(Effects.Jobs.update('JOB-ID-1234', 'active'))
-expectType<Promise<Effects.Jobs.Job>>(Effects.Jobs.update('JOB-ID-1234', 'processed'))
-expectType<Promise<Effects.Jobs.Job>>(Effects.Jobs.update('JOB-ID-1234', 'failed'))
+expectType<Promise<Effects.Jobs.Job>>(
+  Effects.Jobs.update('JOB-ID-1234', 'active'),
+)
+expectType<Promise<Effects.Jobs.Job>>(
+  Effects.Jobs.update('JOB-ID-1234', 'processed'),
+)
+expectType<Promise<Effects.Jobs.Job>>(
+  Effects.Jobs.update('JOB-ID-1234', 'failed'),
+)
 
 /**
  * Effects.Logs

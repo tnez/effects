@@ -2,24 +2,21 @@ export default Effects
 
 declare namespace Effects {
   interface RecordMetadata {
-      /**
-       * Timestamp representing when this record was created.
-       */
-      createdAt: Date
-      /**
-       * Unique identifier of the record
-       * @example `OID-ABCD-1234`
-       */
-      id: string
-      /**
-       * Timestamp representing the last time this record was updated. When first created, this will match the `createdAt` timestamp.
-       */
-      updatedAt: Date
+    /**
+     * Timestamp representing when this record was created.
+     */
+    createdAt: Date
+    /**
+     * Unique identifier of the record
+     * @example `OID-ABCD-1234`
+     */
+    id: string
+    /**
+     * Timestamp representing the last time this record was updated. When first created, this will match the `createdAt` timestamp.
+     */
+    updatedAt: Date
   }
-  type RecordMetadataKeys =
-  | 'createdAt'
-  | 'id'
-  | 'updatedAt'
+  type RecordMetadataKeys = 'createdAt' | 'id' | 'updatedAt'
 
   namespace Data {
     interface DataRecord extends RecordMetadata {
@@ -56,25 +53,30 @@ declare namespace Effects {
      * })
      * ```
      */
-    function insert(record: Omit<DataRecord, RecordMetadataKeys>): Promise<DataRecord>
+    function insert(
+      record: Omit<DataRecord, RecordMetadataKeys>,
+    ): Promise<DataRecord>
 
     /**
      * Update the data property of the given record, identified by the specified ID.
      * The update is performed by merging the existing data property with new data provided.
-     * @param id 
-     * @param data 
-     * 
+     * @param id
+     * @param data
+     *
      * @example
      * ```ts
      * const updatedRecord = await data.update('ID-1234', { baz: 'new value' })
      * console.log(updatedRecord) //=> { id: 'ID-1234', data: JSON.stringify({ foo: 'old value', baz: 'new value' })}
      * ```
      */
-    function update(id: string, data: Record<string, unknown>): Promise<DataRecord>
+    function update(
+      id: string,
+      data: Record<string, unknown>,
+    ): Promise<DataRecord>
 
     /**
      * Remove the specified record from the datastore
-     * @param id 
+     * @param id
      */
     function remove(id: string): Promise<void>
   }
@@ -105,7 +107,10 @@ declare namespace Effects {
       name?: Job['name']
     }
 
-    function enqueue(job: Omit<Job, RecordMetadataKeys | 'status' | 'runAfter'> & Pick<Partial<Job>, 'runAfter'>): Promise<Job>
+    function enqueue(
+      job: Omit<Job, RecordMetadataKeys | 'status' | 'runAfter'> &
+        Pick<Partial<Job>, 'runAfter'>,
+    ): Promise<Job>
     function dequeue(id: string): Promise<Job>
     function update(id: string, status: Job['status']): Promise<Job>
   }

@@ -70,9 +70,9 @@ export class CreateNewUserAction {
   private readonly logs: Logs
 
   constructor(context: CreateNewUserActionContext) {
-      this.data = context.data
-      this.jobs = context.jobs
-      this.logs = context.logs
+    this.data = context.data
+    this.jobs = context.jobs
+    this.logs = context.logs
   }
 
   async execute(input: CreateNewUserActionInput) {
@@ -81,14 +81,14 @@ export class CreateNewUserAction {
       version: '1.0',
       data: JSON.stringify(input),
     })
-  
+
     await jobs.enqueue({
       topic: 'build_related_user_list',
       data: JSON.stringify({ userId: user.id }),
     })
-  
+
     await logs.emit(`Created new user: ${user.id}`)
-  
+
     return user
   }
 }
@@ -97,14 +97,21 @@ export class CreateNewUserAction {
 Which can be unit-tested, completely isolated from the implementation details of any database, queue, or log service.
 
 ```ts
-import { CreateNewUserAction, CreateNewUserActionContext, CreateNewUserActionInput } from './create-new-user-action'
+import {
+  CreateNewUserAction,
+  CreateNewUserActionContext,
+  CreateNewUserActionInput,
+} from './create-new-user-action'
 
 describe('CreateNewUserAction', () => {
   test('it should create a new user record', async () => {
     // Given
     const context = createMockContext()
     const action = new CreateNewUserAction(context)
-    const input: CreateNewUserActionInput = { email: 'user@example.com', tags: ['beta', 'priority']}
+    const input: CreateNewUserActionInput = {
+      email: 'user@example.com',
+      tags: ['beta', 'priority'],
+    }
 
     // When
     await action.execute(input)
@@ -121,7 +128,10 @@ describe('CreateNewUserAction', () => {
     // Given
     const context = createMockContext()
     const action = new CreateNewUserAction(context)
-    const input: CreateNewUserActionInput = { email: 'user@example.com', tags: ['beta', 'priority']}
+    const input: CreateNewUserActionInput = {
+      email: 'user@example.com',
+      tags: ['beta', 'priority'],
+    }
 
     // When
     const user = await action.execute(input)
@@ -129,7 +139,7 @@ describe('CreateNewUserAction', () => {
     // Then
     expect(context.jobs).toHaveBeenCalledWith({
       topic: 'build_related_user_list',
-      data: JSON.stringify({ userId: user.id })
+      data: JSON.stringify({ userId: user.id }),
     })
   })
 
@@ -137,7 +147,10 @@ describe('CreateNewUserAction', () => {
     // Given
     const context = createMockContext()
     const action = new CreateNewUserAction(context)
-    const input: CreateNewUserActionInput = { email: 'user@example.com', tags: ['beta', 'priority']}
+    const input: CreateNewUserActionInput = {
+      email: 'user@example.com',
+      tags: ['beta', 'priority'],
+    }
 
     // When
     const user = await action.execute(input)
@@ -145,18 +158,22 @@ describe('CreateNewUserAction', () => {
     // Then
     expect(context.jobs).toHaveBeenCalledWith({
       topic: 'build_related_user_list',
-      data: JSON.stringify({ userId: user.id })
+      data: JSON.stringify({ userId: user.id }),
     })
   })
 })
 
-const DEFAULT_MOCK_INSERT_RECORD_IMPLEMENTATION = async () => ({ id: 'USER-ID-1234' })
+const DEFAULT_MOCK_INSERT_RECORD_IMPLEMENTATION = async () => ({
+  id: 'USER-ID-1234',
+})
 function createMockContext(
-  insertRecordMockImplementation = DEFAULT_MOCK_INSERT_RECORD_IMPLEMENTATION
+  insertRecordMockImplementation = DEFAULT_MOCK_INSERT_RECORD_IMPLEMENTATION,
 ): CreateNewUserActionContext {
   return {
     data: {
-      insertRecord: jest.fn().mockImplementationOnce(insertRecordMockImplementation),
+      insertRecord: jest
+        .fn()
+        .mockImplementationOnce(insertRecordMockImplementation),
     },
     jobs: {
       dequeue: jest.fn(),
@@ -168,4 +185,3 @@ function createMockContext(
   }
 }
 ```
-
