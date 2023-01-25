@@ -1,7 +1,7 @@
 export default Effects
 
 declare namespace Effects {
-  interface RecordMetadata {
+  type RecordMetadata = {
     /**
      * Timestamp representing when this record was created.
      */
@@ -19,7 +19,7 @@ declare namespace Effects {
   type RecordMetadataKeys = 'createdAt' | 'id' | 'updatedAt'
 
   namespace Data {
-    interface DataRecord extends RecordMetadata {
+    type DataRecord = {
       /**
        * Data payload
        * @example `{ foo: 'baz', fizz: 'buzz', answer: 42 }
@@ -36,7 +36,7 @@ declare namespace Effects {
        * @example '1.0'
        */
       version: string
-    }
+    } & RecordMetadata
 
     /**
      * Insert a record into the datastore
@@ -82,7 +82,7 @@ declare namespace Effects {
   }
 
   namespace Jobs {
-    interface Job extends RecordMetadata {
+    type Job = {
       /**
        * Context required for the job. Likely will be serialized as JSON when stored.
        * @example `{ productId: 'PID-1234-ABCD', n: 5, tags: ['green', 'yo-yo'] }
@@ -101,11 +101,7 @@ declare namespace Effects {
        * Status of the job
        */
       status: 'queued' | 'active' | 'processed' | 'failed'
-    }
-
-    interface JobFilter {
-      name?: Job['name']
-    }
+    } & RecordMetadata
 
     function enqueue(
       job: Omit<Job, RecordMetadataKeys | 'status' | 'runAfter'> &
