@@ -1,0 +1,22 @@
+name: checks
+on:
+  pull_request:
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org/'
+          scope: '@tnezdev'
+      - name: Installing Dependencies
+        run: npm ci
+      - name: Running Code Checks
+        run: npm run check:*
+      - name: Running Tests
+        run: npm test
