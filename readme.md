@@ -76,15 +76,15 @@ export class CreateNewUserAction {
   }
 
   async execute(input: CreateNewUserActionInput) {
-    const user = await data.insertRecord({
+    const user = await data.insert({
       type: 'user',
       version: '1.0',
-      data: JSON.stringify(input),
+      data: input,
     })
 
     await jobs.enqueue({
-      topic: 'build_related_user_list',
-      data: JSON.stringify({ userId: user.id }),
+      name: 'build_related_user_list',
+      context: { userId: user.id },
     })
 
     await logs.emit(`Created new user: ${user.id}`)
@@ -120,7 +120,7 @@ describe('CreateNewUserAction', () => {
     expect(context.data).toHaveBeenCalledWith({
       type: 'user',
       version: '1.0',
-      data: JSON.stringify(input),
+      data: input,
     })
   })
 
@@ -171,9 +171,7 @@ function createMockContext(
 ): CreateNewUserActionContext {
   return {
     data: {
-      insertRecord: jest
-        .fn()
-        .mockImplementationOnce(insertRecordMockImplementation),
+      insert: jest.fn().mockImplementationOnce(insertRecordMockImplementation),
     },
     jobs: {
       dequeue: jest.fn(),

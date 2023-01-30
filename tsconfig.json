@@ -12,5 +12,6 @@
     "noEmit": true,
     "forceConsistentCasingInFileNames": true
   },
-  "files": ["index.d.ts", "index.test-d.ts"]
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules"]
 }
