@@ -1,4 +1,8 @@
-import type { DocumentMetadata, DocumentMetadataKeys } from '../common'
+import type {
+  DocumentMetadata,
+  DocumentMetadataKey,
+  Pagination as _Pagination,
+} from '../common'
 
 export type Document = {
   /**
@@ -43,6 +47,37 @@ export type Document = {
   version: string
 } & DocumentMetadata
 
+export type Pagination = _Pagination
+
+type DocumentSearchKey = 'key_1' | 'key_2' | 'key_3' | 'key_4'
+type DocumentTimestampKey = 'createdAt' | 'updatedAt'
+type DocumentVersionKey = 'version'
+
+type DocumentOrderKey = DocumentSearchKey | 'createdAt' | 'updatedAt'
+type DocumentOrderTerm = Partial<
+  Record<DocumentOrderKey, 'ascending' | 'descending'>
+>
+type DocumentOrderClause = DocumentOrderTerm[]
+
+type WhereTerm =
+  | { contains: string }
+  | { contains: string[] }
+  | { eq: string }
+  | { eq: string[] }
+  | { gt: string }
+  | { gte: string }
+  | { is: null }
+  | { lt: string }
+  | { lte: string }
+type Negate<T> = { not: T }
+type DocumentWhereKey =
+  | DocumentSearchKey
+  | DocumentTimestampKey
+  | DocumentVersionKey
+type DocumentWhereClause = Partial<
+  Record<DocumentWhereKey, WhereTerm | Negate<WhereTerm>>
+>
+
 /**
  * Insert a record into the datastore
  * @param record
@@ -59,8 +94,50 @@ export type Document = {
  * ```
  */
 export function insert(
-  record: Omit<Document, DocumentMetadataKeys>,
+  record: Omit<Document, DocumentMetadataKey>,
 ): Promise<Document>
+
+/**
+ * Query data for a list of records that match the given criteria.
+ *
+ * @example
+ * ```js
+ * const { records, pagination } = await query({
+ *   type: 'note',
+ *   where: {
+ *   key_1: { eq: ['author:tnez', 'author:another-one'] },
+ *   key_2: { eq: 'cohort:lends' },
+ *   version: { eq: '1.0' },
+ *   },
+ *   orderBy: [
+ *     { createdAt: 'descending' },
+ *   ],
+ *   take: 100,
+ * })
+ * ```
+ */
+export function query(input: {
+  /**
+   * Type of record to be returned
+   */
+  type: string
+  /**
+   * Where the documents are filtered with the following criteria
+   */
+  where?: DocumentWhereClause
+  /**
+   * Return records ordered by the following terms
+   */
+  orderBy?: DocumentOrderClause
+  /**
+   * Retrun at most this many number of records
+   */
+  take?: number
+  /**
+   * Return records after the given cursor (if given)
+   */
+  after?: string | null
+}): Promise<{ documents: Document[]; pagination: Pagination }>
 
 /**
  * Update the data property of the given record, identified by the specified ID.
@@ -93,6 +170,7 @@ export function remove(id: string): Promise<void>
 
 export type Data = {
   insert: typeof insert
+  query: typeof query
   update: typeof update
   remove: typeof remove
 }

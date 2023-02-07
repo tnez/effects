@@ -20,4 +20,11 @@ export type DocumentMetadata = {
 /**
  * Keys of DocumentMetadata exported as a convenience.
  */
-export type DocumentMetadataKeys = keyof DocumentMetadata
+export type DocumentMetadataKey = keyof DocumentMetadata
+
+/**
+ * Pagination data
+ */
+export type Pagination = {
+  nextCursor: string | null
+}
