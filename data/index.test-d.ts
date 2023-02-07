@@ -31,4 +31,11 @@ expectType<Promise<Data.Document>>(
 expectType<Promise<Data.Document>>(
   Data.update('ID-1234-ABCD', { baz: 'new value' }),
 )
+expectType<Promise<Data.Document>>(
+  Data.update(
+    'ID-1234-ABCD',
+    { baz: 'new value' },
+    { key_2: 'new value', key_3: 'another new value' },
+  ),
+)
 expectType<Promise<void>>(Data.remove('ID-1234-ABCD'))
