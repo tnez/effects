@@ -7,6 +7,30 @@ export type Document = {
    */
   data: Record<string, unknown>
   /**
+   * A search key that can be used to partition subsets of records
+   * @example `user_1234`
+   * @example `team_1234`
+   */
+  key_1?: string
+  /**
+   * A search key that can be used to partition subsets of records
+   * @example `user_1234`
+   * @example `team_1234`
+   */
+  key_2?: string
+  /**
+   * A search key that can be used to partition subsets of records
+   * @example `user_1234`
+   * @example `team_1234`
+   */
+  key_3?: string
+  /**
+   * A search key that can be used to partition subsets of records
+   * @example `user_1234`
+   * @example `team_1234`
+   */
+  key_4?: string
+  /**
    * Identifies the _type_ of record.
    * @example 'user'
    * @example 'order'
