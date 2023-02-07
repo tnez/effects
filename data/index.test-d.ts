@@ -16,8 +16,8 @@ expectType<Promise<Data.Document>>(
     type: 'thing',
     version: '1.0',
     data: { foo: 'bar', baz: 'fizz' },
-    key_1: 'bar',
-    key_2: 'fizz',
+    sk1: 'bar',
+    sk2: 'fizz',
   }),
 )
 expectType<Promise<Data.Document>>(
@@ -25,10 +25,10 @@ expectType<Promise<Data.Document>>(
     type: 'thing',
     version: '1.0',
     data: { foo: 'bar', baz: 'fizz' },
-    key_1: 'bar',
-    key_2: 'fizz',
-    key_3: 'another',
-    key_4: 'thing',
+    sk1: 'bar',
+    sk2: 'fizz',
+    sk3: 'another',
+    sk4: 'thing',
   }),
 )
 
@@ -44,13 +44,13 @@ expectType<
   Data.query({
     type: 'thing',
     where: {
-      key_1: { gt: 'some-value' },
-      key_2: { eq: ['excalibur', 'round-table'] },
-      key_3: { contains: ['inner'] },
+      sk1: { gt: 'some-value' },
+      sk2: { eq: ['excalibur', 'round-table'] },
+      sk3: { contains: ['inner'] },
       version: { gte: '2.2' },
       createdAt: { gt: '1970-01-01T00:00:00' },
     },
-    orderBy: [{ key_1: 'ascending' }, { createdAt: 'descending' }],
+    orderBy: [{ sk1: 'ascending' }, { createdAt: 'descending' }],
     take: 50,
     after: 'some-valuez:1970-01-01T00:23:24',
   }),
@@ -66,7 +66,7 @@ expectType<Promise<Data.Document>>(
   Data.update(
     'ID-1234-ABCD',
     { baz: 'new value' },
-    { key_2: 'new value', key_3: 'another new value' },
+    { sk2: 'new value', sk3: 'another new value' },
   ),
 )
 

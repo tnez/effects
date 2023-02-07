@@ -1,6 +1,6 @@
 import type {
   DocumentMetadata,
-  DocumentMetadataKey,
+  DocumentMetadataKeys,
   Pagination as _Pagination,
 } from '../common'
 
@@ -15,25 +15,25 @@ export type Document = {
    * @example `user_1234`
    * @example `team_1234`
    */
-  key_1?: string
+  sk1?: string
   /**
    * A search key that can be used to partition subsets of records
    * @example `user_1234`
    * @example `team_1234`
    */
-  key_2?: string
+  sk2?: string
   /**
    * A search key that can be used to partition subsets of records
    * @example `user_1234`
    * @example `team_1234`
    */
-  key_3?: string
+  sk3?: string
   /**
    * A search key that can be used to partition subsets of records
    * @example `user_1234`
    * @example `team_1234`
    */
-  key_4?: string
+  sk4?: string
   /**
    * Identifies the _type_ of record.
    * @example 'user'
@@ -49,11 +49,14 @@ export type Document = {
 
 export type Pagination = _Pagination
 
-type DocumentSearchKey = 'key_1' | 'key_2' | 'key_3' | 'key_4'
-type DocumentTimestampKey = 'createdAt' | 'updatedAt'
-type DocumentVersionKey = 'version'
+type DocumentSearchKeys = keyof Pick<Document, 'sk1' | 'sk2' | 'sk3' | 'sk4'>
+type DocumentTimestampKeys = keyof Pick<
+  DocumentMetadata,
+  'createdAt' | 'updatedAt'
+>
+type DocumentVersionKeys = keyof Pick<Document, 'version'>
 
-type DocumentOrderKey = DocumentSearchKey | 'createdAt' | 'updatedAt'
+type DocumentOrderKey = DocumentSearchKeys | 'createdAt' | 'updatedAt'
 type DocumentOrderTerm = Partial<
   Record<DocumentOrderKey, 'ascending' | 'descending'>
 >
@@ -66,14 +69,14 @@ type WhereTerm =
   | { eq: string[] }
   | { gt: string }
   | { gte: string }
-  | { is: null }
+  | { isNull: boolean }
   | { lt: string }
   | { lte: string }
 type Negate<T> = { not: T }
 type DocumentWhereKey =
-  | DocumentSearchKey
-  | DocumentTimestampKey
-  | DocumentVersionKey
+  | DocumentSearchKeys
+  | DocumentTimestampKeys
+  | DocumentVersionKeys
 type DocumentWhereClause = Partial<
   Record<DocumentWhereKey, WhereTerm | Negate<WhereTerm>>
 >
@@ -94,7 +97,7 @@ type DocumentWhereClause = Partial<
  * ```
  */
 export function insert(
-  record: Omit<Document, DocumentMetadataKey>,
+  record: Omit<Document, DocumentMetadataKeys>,
 ): Promise<Document>
 
 /**
@@ -136,7 +139,7 @@ export function query(input: {
   /**
    * Return records after the given cursor (if given)
    */
-  after?: string | null
+  after?: string | undefined
 }): Promise<{ documents: Document[]; pagination: Pagination }>
 
 /**
@@ -154,12 +157,7 @@ export function query(input: {
 export function update(
   id: string,
   data: Record<string, unknown>,
-  keys?: Partial<{
-    key_1: string
-    key_2: string
-    key_3: string
-    key_4: string
-  }>,
+  keys?: Partial<Pick<Document, DocumentSearchKeys>>,
 ): Promise<Document>
 
 /**
