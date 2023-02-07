@@ -1,4 +1,8 @@
-import type { DocumentMetadata, DocumentMetadataKeys } from '../common'
+import type {
+  DocumentMetadata,
+  DocumentMetadataKeys,
+  Pagination as _Pagination,
+} from '../common'
 
 export type Document = {
   /**
@@ -6,6 +10,30 @@ export type Document = {
    * @example `{ foo: 'baz', fizz: 'buzz', answer: 42 }
    */
   data: Record<string, unknown>
+  /**
+   * A search key that can be used to partition subsets of records
+   * @example `user_1234`
+   * @example `team_1234`
+   */
+  sk1?: string
+  /**
+   * A search key that can be used to partition subsets of records
+   * @example `user_1234`
+   * @example `team_1234`
+   */
+  sk2?: string
+  /**
+   * A search key that can be used to partition subsets of records
+   * @example `user_1234`
+   * @example `team_1234`
+   */
+  sk3?: string
+  /**
+   * A search key that can be used to partition subsets of records
+   * @example `user_1234`
+   * @example `team_1234`
+   */
+  sk4?: string
   /**
    * Identifies the _type_ of record.
    * @example 'user'
@@ -18,6 +46,40 @@ export type Document = {
    */
   version: string
 } & DocumentMetadata
+
+export type Pagination = _Pagination
+
+type DocumentSearchKeys = keyof Pick<Document, 'sk1' | 'sk2' | 'sk3' | 'sk4'>
+type DocumentTimestampKeys = keyof Pick<
+  DocumentMetadata,
+  'createdAt' | 'updatedAt'
+>
+type DocumentVersionKeys = keyof Pick<Document, 'version'>
+
+type DocumentOrderKey = DocumentSearchKeys | 'createdAt' | 'updatedAt'
+type DocumentOrderTerm = Partial<
+  Record<DocumentOrderKey, 'ascending' | 'descending'>
+>
+type DocumentOrderClause = DocumentOrderTerm[]
+
+type WhereTerm =
+  | { contains: string }
+  | { contains: string[] }
+  | { eq: string }
+  | { eq: string[] }
+  | { gt: string }
+  | { gte: string }
+  | { isNull: boolean }
+  | { lt: string }
+  | { lte: string }
+type Negate<T> = { not: T }
+type DocumentWhereKey =
+  | DocumentSearchKeys
+  | DocumentTimestampKeys
+  | DocumentVersionKeys
+type DocumentWhereClause = Partial<
+  Record<DocumentWhereKey, WhereTerm | Negate<WhereTerm>>
+>
 
 /**
  * Insert a record into the datastore
@@ -39,6 +101,48 @@ export function insert(
 ): Promise<Document>
 
 /**
+ * Query data for a list of records that match the given criteria.
+ *
+ * @example
+ * ```js
+ * const { records, pagination } = await query({
+ *   type: 'note',
+ *   where: {
+ *   key_1: { eq: ['author:tnez', 'author:another-one'] },
+ *   key_2: { eq: 'cohort:lends' },
+ *   version: { eq: '1.0' },
+ *   },
+ *   orderBy: [
+ *     { createdAt: 'descending' },
+ *   ],
+ *   take: 100,
+ * })
+ * ```
+ */
+export function query(input: {
+  /**
+   * Type of record to be returned
+   */
+  type: string
+  /**
+   * Where the documents are filtered with the following criteria
+   */
+  where?: DocumentWhereClause
+  /**
+   * Return records ordered by the following terms
+   */
+  orderBy?: DocumentOrderClause
+  /**
+   * Retrun at most this many number of records
+   */
+  take?: number
+  /**
+   * Return records after the given cursor (if given)
+   */
+  after?: string | undefined
+}): Promise<{ documents: Document[]; pagination: Pagination }>
+
+/**
  * Update the data property of the given record, identified by the specified ID.
  * The update is performed by merging the existing data property with new data provided.
  * @param id
@@ -53,6 +157,7 @@ export function insert(
 export function update(
   id: string,
   data: Record<string, unknown>,
+  keys?: Partial<Pick<Document, DocumentSearchKeys>>,
 ): Promise<Document>
 
 /**
@@ -63,6 +168,7 @@ export function remove(id: string): Promise<void>
 
 export type Data = {
   insert: typeof insert
+  query: typeof query
   update: typeof update
   remove: typeof remove
 }
