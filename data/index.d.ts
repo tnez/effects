@@ -124,7 +124,7 @@ export function insert(
  *   take: 100,
  * })
  *
- * @example
+ * @example - an example of a query that returns all records of type `note` that include the text `pattern to search for within note` in full-text searchable content.
  * const { records, pagination } = await query({
  *   type: 'note',
  *   text: 'pattern to search for within note',
