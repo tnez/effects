@@ -35,6 +35,12 @@ export type Document = {
    */
   sk4?: string
   /**
+   * A field that is used to hold text that can be searched.
+   * Application logic is responsible for figuring out what should be included in this field to enable full-text search. This field is simply made available and indexed for efficient searching.
+   * @example 'Title of the note And the body of the note is concatenated here'
+   */
+  text?: string
+  /**
    * Identifies the _type_ of record.
    * @example 'user'
    * @example 'order'
@@ -103,19 +109,25 @@ export function insert(
 /**
  * Query data for a list of records that match the given criteria.
  *
- * @example
+ * @example - an example of a query that returns all records of type `note` that have been authored by either `tnez` or `another-one` and are part of the `lends` cohort.
  * ```js
  * const { records, pagination } = await query({
  *   type: 'note',
  *   where: {
- *   key_1: { eq: ['author:tnez', 'author:another-one'] },
- *   key_2: { eq: 'cohort:lends' },
- *   version: { eq: '1.0' },
+ *     key_1: { eq: ['author:tnez', 'author:another-one'] },
+ *     key_2: { eq: 'cohort:lends' },
+ *     version: { eq: '1.0' },
  *   },
  *   orderBy: [
  *     { createdAt: 'descending' },
  *   ],
  *   take: 100,
+ * })
+ *
+ * @example
+ * const { records, pagination } = await query({
+ *   type: 'note',
+ *   text: 'pattern to search for within note',
  * })
  * ```
  */
@@ -129,13 +141,22 @@ export function query(input: {
    */
   where?: DocumentWhereClause
   /**
-   * Return records ordered by the following terms
+   * Return records ordered by the following terms. Keep in mind that the order of the items in the array is respsected when sorting.
+   * @default [{ createdAt: 'descending' }]
+   * @example `[{ sk1: 'ascending' }, { updatedAt: 'descending' }]`
    */
   orderBy?: DocumentOrderClause
   /**
    * Retrun at most this many number of records
+   * @default 100
+   * @example 25
    */
   take?: number
+  /**
+   * Use full-text search to return records that match the given text
+   * @example 'pattern to search for within note'
+   */
+  text?: string
   /**
    * Return records after the given cursor (if given)
    */
@@ -145,8 +166,9 @@ export function query(input: {
 /**
  * Update the data property of the given record, identified by the specified ID.
  * The update is performed by merging the existing data property with new data provided.
- * @param id
- * @param data
+ * @param id - ID of the record to be updated
+ * @param data - New data to be merged with the existing data property
+ * @param internals - Internal properties, such as search keys and full-text search text, that can be updated.
  *
  * @example
  * ```ts
@@ -157,7 +179,7 @@ export function query(input: {
 export function update(
   id: string,
   data: Record<string, unknown>,
-  keys?: Partial<Pick<Document, DocumentSearchKeys>>,
+  internals?: Partial<Pick<Document, DocumentSearchKeys | 'text'>>,
 ): Promise<Document>
 
 /**

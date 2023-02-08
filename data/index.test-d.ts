@@ -29,6 +29,7 @@ expectType<Promise<Data.Document>>(
     sk2: 'fizz',
     sk3: 'another',
     sk4: 'thing',
+    text: 'content for full-text search',
   }),
 )
 
@@ -55,6 +56,14 @@ expectType<
     after: 'some-valuez:1970-01-01T00:23:24',
   }),
 )
+expectType<
+  Promise<{ documents: Data.Document[]; pagination: Data.Pagination }>
+>(
+  Data.query({
+    type: 'note',
+    text: 'some text in body of note',
+  }),
+)
 
 /**
  * Update
@@ -66,7 +75,11 @@ expectType<Promise<Data.Document>>(
   Data.update(
     'ID-1234-ABCD',
     { baz: 'new value' },
-    { sk2: 'new value', sk3: 'another new value' },
+    {
+      sk2: 'new value',
+      sk3: 'another new value',
+      text: 'updating full-text here',
+    },
   ),
 )
 
