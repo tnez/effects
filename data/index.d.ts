@@ -68,24 +68,41 @@ type DocumentOrderTerm = Partial<
 >
 type DocumentOrderClause = DocumentOrderTerm[]
 
-type WhereTerm =
-  | { contains: string }
-  | { contains: string[] }
-  | { eq: string }
-  | { eq: string[] }
-  | { gt: string }
-  | { gte: string }
-  | { isNull: boolean }
-  | { lt: string }
-  | { lte: string }
+type WhereTerm<T extends string | Date> = T extends string
+  ?
+      | { contains: T }
+      | { contains: T[] }
+      | { eq: T }
+      | { eq: T[] }
+      | { gt: T }
+      | { gte: T }
+      | { isNull: boolean }
+      | { lt: T }
+      | { lte: T }
+  :
+      | { eq: T }
+      | { eq: T[] }
+      | { gt: T }
+      | { gte: T }
+      | { isNull: boolean }
+      | { lt: T }
+      | { lte: T }
+
 type Negate<T> = { not: T }
 type DocumentWhereKey =
   | DocumentSearchKeys
   | DocumentTimestampKeys
   | DocumentVersionKeys
-type DocumentWhereClause = Partial<
-  Record<DocumentWhereKey, WhereTerm | Negate<WhereTerm>>
->
+type DocumentWhereClause = Partial<{
+  type: WhereTerm<string>
+  version: WhereTerm<string>
+  createdAt: WhereTerm<Date>
+  updatedAt: WhereTerm<Date>
+  sk1: WhereTerm<string> | Negate<WhereTerm<string>>
+  sk2: WhereTerm<string> | Negate<WhereTerm<string>>
+  sk3: WhereTerm<string> | Negate<WhereTerm<string>>
+  sk4: WhereTerm<string> | Negate<WhereTerm<string>>
+}>
 
 /**
  * Insert a record into the datastore

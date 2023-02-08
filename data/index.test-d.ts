@@ -49,7 +49,7 @@ expectType<
       sk2: { eq: ['excalibur', 'round-table'] },
       sk3: { contains: ['inner'] },
       version: { gte: '2.2' },
-      createdAt: { gt: '1970-01-01T00:00:00' },
+      createdAt: { gt: new Date() },
     },
     orderBy: [{ sk1: 'ascending' }, { createdAt: 'descending' }],
     take: 50,
