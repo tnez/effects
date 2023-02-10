@@ -46,8 +46,8 @@ expectType<
     type: 'thing',
     where: {
       sk1: { gt: 'some-value' },
-      sk2: { eq: ['excalibur', 'round-table'] },
-      sk3: { contains: ['inner'] },
+      sk2: { eq: 'excalibur' },
+      sk3: { neq: 'inner' },
       version: { gte: '2.2' },
       createdAt: { gt: new Date() },
     },
