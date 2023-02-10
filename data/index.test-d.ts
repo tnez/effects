@@ -2,6 +2,11 @@ import { expectType } from 'tsd'
 import * as Data from '.'
 
 /**
+ * Get
+ */
+expectType<Promise<Data.Document | undefined>>(Data.get('ID-1234-ABCD'))
+
+/**
  * Insert
  */
 expectType<Promise<Data.Document>>(

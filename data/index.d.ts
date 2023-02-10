@@ -95,6 +95,16 @@ type DocumentWhereClause = Partial<{
 }>
 
 /**
+ * Get a single document by ID. Will return undefined if document is not found.
+ * @param id
+ * @example
+ * ```ts
+ * const document = await data.get('user_1234')
+ * ```
+ */
+export function get(id: string): Promise<Document | undefined>
+
+/**
  * Insert a record into the datastore
  * @param record
  * @example
@@ -196,6 +206,7 @@ export function update(
 export function remove(id: string): Promise<void>
 
 export type Data = {
+  get: typeof get
   insert: typeof insert
   query: typeof query
   update: typeof update
