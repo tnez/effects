@@ -70,25 +70,15 @@ type DocumentOrderClause = DocumentOrderTerm[]
 
 type WhereTerm<T extends string | Date> = T extends string
   ?
-      | { contains: T }
-      | { contains: T[] }
       | { eq: T }
-      | { eq: T[] }
       | { gt: T }
       | { gte: T }
       | { isNull: boolean }
       | { lt: T }
       | { lte: T }
-  :
-      | { eq: T }
-      | { eq: T[] }
-      | { gt: T }
-      | { gte: T }
-      | { isNull: boolean }
-      | { lt: T }
-      | { lte: T }
+      | { neq: T }
+  : { gt: T } | { gte: T } | { lt: T } | { lte: T }
 
-type Negate<T> = { not: T }
 type DocumentWhereKey =
   | DocumentSearchKeys
   | DocumentTimestampKeys
@@ -98,10 +88,10 @@ type DocumentWhereClause = Partial<{
   version: WhereTerm<string>
   createdAt: WhereTerm<Date>
   updatedAt: WhereTerm<Date>
-  sk1: WhereTerm<string> | Negate<WhereTerm<string>>
-  sk2: WhereTerm<string> | Negate<WhereTerm<string>>
-  sk3: WhereTerm<string> | Negate<WhereTerm<string>>
-  sk4: WhereTerm<string> | Negate<WhereTerm<string>>
+  sk1: WhereTerm<string>
+  sk2: WhereTerm<string>
+  sk3: WhereTerm<string>
+  sk4: WhereTerm<string>
 }>
 
 /**
