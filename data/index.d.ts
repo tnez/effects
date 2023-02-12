@@ -121,7 +121,7 @@ export function get(id: string): Promise<Document | undefined>
  */
 export function insert(
   record: Omit<Document, DocumentMetadataKeys>,
-): Promise<Document>
+): Promise<{ id: string }>
 
 /**
  * Query data for a list of records that match the given criteria.

@@ -9,14 +9,14 @@ expectType<Promise<Data.Document | undefined>>(Data.get('ID-1234-ABCD'))
 /**
  * Insert
  */
-expectType<Promise<Data.Document>>(
+expectType<Promise<{ id: string }>>(
   Data.insert({
     type: 'thing',
     version: '1.0',
     data: { foo: 'bar', baz: 'fizz' },
   }),
 )
-expectType<Promise<Data.Document>>(
+expectType<Promise<{ id: string }>>(
   Data.insert({
     type: 'thing',
     version: '1.0',
@@ -25,7 +25,7 @@ expectType<Promise<Data.Document>>(
     sk2: 'fizz',
   }),
 )
-expectType<Promise<Data.Document>>(
+expectType<Promise<{ id: string }>>(
   Data.insert({
     type: 'thing',
     version: '1.0',
