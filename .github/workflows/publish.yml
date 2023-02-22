@@ -1,4 +1,4 @@
-name: publish
+name: version
 on:
   push:
     branches:
@@ -6,12 +6,13 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+env:
+  CI: true
+  PNPM_CACHE_FOLDER: .pnpm-store
+
 jobs:
-  publish:
+  version:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
@@ -21,18 +22,19 @@ jobs:
         with:
           node-version: '18.x'
           cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org/'
-          scope: '@tnezdev'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Setup npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+      - name: Setup pnpm config
+        run: pnpm config set store-dir $PNPM_CACHE_FOLDER
       - name: Installing Dependencies
         run: pnpm install --frozen-lockfile
       - name: Create Release Pull Request or Publish
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm run publish-packages
-          version: pnpm run version-packages
+          commit: 'chore: update versions'
+          publish: pnpm run ci:publish
+          title: 'chore: update versions'
+          version: pnpm run ci:version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
