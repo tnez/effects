@@ -9,6 +9,8 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v2
         with:
           version: 7
@@ -24,3 +26,5 @@ jobs:
         run: pnpm turbo check:*
       - name: Running Tests
         run: pnpm turbo test
+      - name: Require Changeset
+        run: pnpm run require-changeset
