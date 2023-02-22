@@ -1,22 +1,35 @@
 name: publish
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
-  main:
+  publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
+          cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org/'
           scope: '@tnezdev'
-      - name: Publishing Code
-        uses: JS-DevTools/npm-publish@v1
+      - name: Installing Dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
         with:
-          access: 'public'
-          token: ${{ secrets.NPM_TOKEN }}
+          publish: pnpm run publish-packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
