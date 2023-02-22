@@ -1,6 +1,7 @@
 {
   "scripts": {
     "publish-packages": "changeset publish",
+    "require-changeset": "changeset status --since origin/main",
     "version-packages": "changeset version"
   },
   "dependencies": {
