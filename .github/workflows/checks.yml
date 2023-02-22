@@ -9,14 +9,18 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org/'
           scope: '@tnezdev'
+          cache: 'pnpm'
       - name: Installing Dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       - name: Running Code Checks
-        run: npm run check:*
+        run: pnpm run check:*
       - name: Running Tests
-        run: npm test
+        run: pnpm test
