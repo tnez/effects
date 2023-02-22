@@ -21,6 +21,6 @@ jobs:
       - name: Installing Dependencies
         run: pnpm install --frozen-lockfile
       - name: Running Code Checks
-        run: pnpm run check:*
+        run: pnpm turbo check:*
       - name: Running Tests
-        run: pnpm test
+        run: pnpm turbo test

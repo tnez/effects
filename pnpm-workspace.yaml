@@ -1,0 +1,5 @@
+packages:
+  # packages to be published to npm registry
+  - 'packages/*'
+  # internal helpers
+  - 'internal/*'
