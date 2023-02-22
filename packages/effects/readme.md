@@ -54,9 +54,9 @@ As you develop your application, we suggest consolidating your business logic in
 import type { Data, Jobs, Logs } from '@tnezdev/effects'
 
 export type CreateNewUserActionContext = {
-  data: Data
-  jobs: Jobs
-  logs: Logs
+  data: Pick<Data, 'insert'>
+  jobs: Pick<Jobs, 'enqueue'>
+  logs: Pick<Logs, 'emit'>
 }
 
 export type CreateNewUserActionInput = {
@@ -65,29 +65,25 @@ export type CreateNewUserActionInput = {
 }
 
 export class CreateNewUserAction {
-  private readonly data: Data
-  private readonly jobs: Jobs
-  private readonly logs: Logs
+  private readonly context: CreateNewUserActionContext
 
   constructor(context: CreateNewUserActionContext) {
-    this.data = context.data
-    this.jobs = context.jobs
-    this.logs = context.logs
+    this.context = context
   }
 
   async execute(input: CreateNewUserActionInput) {
-    const user = await data.insert({
+    const user = await context.data.insert({
       type: 'user',
       version: '1.0',
       data: input,
     })
 
-    await jobs.enqueue({
+    await context.jobs.enqueue({
       name: 'build_related_user_list',
       context: { userId: user.id },
     })
 
-    await logs.emit(`Created new user: ${user.id}`)
+    await context.logs.emit(`Created new user: ${user.id}`)
 
     return user
   }
@@ -174,7 +170,6 @@ function createMockContext(
       insert: jest.fn().mockImplementationOnce(insertRecordMockImplementation),
     },
     jobs: {
-      dequeue: jest.fn(),
       enqueue: jest.fn(),
     },
     logs: {
