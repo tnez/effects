@@ -1,6 +1,8 @@
 name: checks
 on:
   pull_request:
+env:
+  CI: true
 jobs:
   main:
     runs-on: ubuntu-latest
@@ -17,8 +19,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-          registry-url: 'https://registry.npmjs.org/'
-          scope: '@tnezdev'
           cache: 'pnpm'
       - name: Installing Dependencies
         run: pnpm install --frozen-lockfile
@@ -27,4 +27,4 @@ jobs:
       - name: Running Tests
         run: pnpm turbo test
       - name: Require Changeset
-        run: pnpm run require-changeset
+        run: pnpm run ci:require-changeset
