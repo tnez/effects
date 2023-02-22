@@ -1,5 +1,6 @@
 {
-  "devDependencies": {
+  "dependencies": {
+    "@changesets/cli": "^2.26.0",
     "turbo": "^1.8.2"
   }
 }
