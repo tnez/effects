@@ -11,16 +11,20 @@
     "email": "travis@tnez.dev"
   },
   "license": "ISC",
-  "main": "",
-  "types": "index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
     "check:*": "pnpm run check:format; pnpm run check:lint",
     "check:format": "prettier --check .",
     "check:lint": "eslint .",
+    "dev": "vitest",
     "fix:format": "prettier . --write",
-    "test": "tsd -f {common,data,jobs,logs}/index.test-d.ts"
+    "test": "vitest run"
   },
   "devDependencies": {
+    "@types/node": "^18.14.4",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",
     "eslint": "8.32.0",
@@ -29,6 +33,8 @@
     "eslint-config-xo-typescript": "0.55.1",
     "prettier": "2.8.3",
     "tsd": "0.25.0",
-    "typescript": "4.9.4"
+    "tsup": "^6.6.3",
+    "typescript": "4.9.4",
+    "vitest": "^0.29.2"
   }
 }
